@@ -1,104 +1,88 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 4,
-   "id": "d0642192",
-   "metadata": {},
-   "outputs": [
-    {
-     "ename": "ModuleNotFoundError",
-     "evalue": "No module named 'tensorflow'",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
-      "\u001b[1;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
-      "\u001b[1;32m~\\AppData\\Local\\Temp\\ipykernel_20924\\3709684212.py\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[0;32m      2\u001b[0m \u001b[1;32mimport\u001b[0m \u001b[0mpandas\u001b[0m \u001b[1;32mas\u001b[0m \u001b[0mpd\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m      3\u001b[0m \u001b[1;32mimport\u001b[0m \u001b[0mrandom\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m----> 4\u001b[1;33m \u001b[1;32mimport\u001b[0m \u001b[0mtensorflow\u001b[0m \u001b[1;32mas\u001b[0m \u001b[0mtf\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m      5\u001b[0m \u001b[1;32mimport\u001b[0m \u001b[0mmatplotlib\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mpyplot\u001b[0m \u001b[1;32mas\u001b[0m \u001b[0mplt\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
-      "\u001b[1;31mModuleNotFoundError\u001b[0m: No module named 'tensorflow'"
-     ]
-    }
-   ],
-   "source": [
-    "import numpy as np\n",
-    "import pandas as pd\n",
-    "import random\n",
-    "import tensorflow as tf\n",
-    "import matplotlib.pyplot as plt\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 5,
-   "id": "6f4dc0af",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Requirement already satisfied: numpy in c:\\users\\admin\\anaconda3\\lib\\site-packages (1.21.5)\n",
-      "Note: you may need to restart the kernel to use updated packages.\n"
-     ]
-    }
-   ],
-   "source": [
-    "pip install numpy\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "id": "22e562d3",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Note: you may need to restart the kernel to use updated packages.\n"
-     ]
-    },
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "ERROR: Could not find a version that satisfies the requirement random (from versions: none)\n",
-      "ERROR: No matching distribution found for random\n"
-     ]
-    }
-   ],
-   "source": [
-    "pip install random"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "94ed1859",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.9.13"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import numpy as np
+import pandas as pd
+import random
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Flatten,Conv2D,Dense,MaxPooling2D
+from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.datasets import mnist
+
+
+(X_train, y_train), (X_test, y_test) = mnist.load_data()
+
+
+
+print(X_train.shape)
+
+
+
+X_train[0].min(), X_train[0].max()
+
+
+X_train = (X_train - 0.0) / (255.0 - 0.0)
+X_test = (X_test - 0.0) / (255.0 - 0.0)
+X_train[0].min(), X_train[0].max()
+
+
+def plot_digit(image, digit, plt, i):
+  plt.subplot(4, 5, i + 1)
+  plt.imshow(image, cmap=plt.get_cmap('gray'))
+  plt.title(f"Digit: {digit}")
+  plt.xticks([])
+  plt.yticks([])
+  plt.figure(figsize=(16, 10))
+
+
+for i in range(20):
+  plot_digit(X_train[i], y_train[i], plt, i)
+  plt.show()
+
+X_train = X_train.reshape((X_train.shape + (1,)))
+X_test = X_test.reshape((X_test.shape + (1,)))
+
+y_train = np.array([5, 0, 4, 1, 9, 2, 1, 3, 1, 4, 3, 5, 3, 6, 1, 7, 2, 8, 6, 9], dtype=np.uint8)
+print(y_train[0:20])
+
+model = Sequential([
+Conv2D(32, (3, 3), activation="relu", input_shape=(28, 28, 1)),
+MaxPooling2D((2, 2)),
+Flatten(),
+Dense(100, activation="relu"),
+Dense(10, activation="softmax")
+])
+
+
+from tensorflow.keras.optimizers import SGD
+optimizer = SGD(learning_rate=0.01, momentum=0.9)
+model.compile(optimizer=optimizer,
+loss="sparse_categorical_crossentropy",metrics=["accuracy"])
+model.summary()
+
+
+(x_train,y_train),(x_test,y_test) = mnist.load_data()
+print(len(x_train), len(y_train))
+
+
+model.fit(X_train, y_train, epochs=10, batch_size=32)
+
+
+plt.figure(figsize=(16, 10))
+for i in range(20):
+ image = random.choice(X_test).squeeze()
+ digit = np.argmax(model.predict(image.reshape((1, 28, 28, 1)))[0],
+ axis=-1)
+ plot_digit(image, digit, plt, i)
+plt.show()
+
+
+plt.figure(figsize=(16, 10))
+for i in range(20):
+    image = random.choice(X_test).squeeze()
+    digit = np.argmax(model.predict(image.reshape((1, 28, 28, 1)), axis=-1)
+    # Make sure you have the correct model for predictions
+    # Also, make sure you have defined the plot_digit function
+    plot_digit(image, digit, plt, i)
+
+plt.show()
